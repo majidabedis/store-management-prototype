@@ -1,0 +1,18 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "customer",
+            "password_hash": "a34192735b4aecd3eefbb7d5836e2e75320bfe7072a0add5530c7c4519460721$426219afc0f325d0d6cab6decc05adffb0e899d4f5c2289fa9137b84b70e1447",
+            "email": "customer@test.com",
+            "full_name": "majid",
+            "phone": "09371108880",
+            "address": "iran,tehran",
+            "role": "customer",
+            "status": "active",
+            "created_at": "2025-03-15 07:48:12.995019",
+            "updated_at": "2025-03-15 07:48:12.996646"
+        }
+    ],
+    "next_id": 2
+}

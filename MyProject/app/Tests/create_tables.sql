@@ -1,0 +1,304 @@
+-- Table: cart
+CREATE TABLE `cart` (
+  `cart_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cart_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: cart_item
+CREATE TABLE `cart_item` (
+  `cart_item_id` int NOT NULL AUTO_INCREMENT,
+  `cart_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `stock_id` int NOT NULL,
+  `price` float NOT NULL,
+  `quantity` int NOT NULL,
+  `added_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cart_item_id`),
+  KEY `cart_id` (`cart_id`),
+  KEY `product_id` (`product_id`),
+  KEY `cart_item_ibfk_2_idx` (`stock_id`),
+  CONSTRAINT `cart_item_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
+  CONSTRAINT `cart_item_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `cart_item_ibfk_3` FOREIGN KEY (`stock_id`) REFERENCES `stock` (`stock_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: coupon
+CREATE TABLE `coupon` (
+  `coupon_id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL,
+  `description` text,
+  `discount_type` enum('percentage','amount') NOT NULL,
+  `discount_value` float NOT NULL,
+  `usage_limit` int DEFAULT NULL,
+  `used_count` int DEFAULT '0',
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`coupon_id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: customer
+CREATE TABLE `customer` (
+  `customer_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `family` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `mobile` char(13) NOT NULL,
+  `birthday` varchar(50) NOT NULL,
+  `age` varchar(3) DEFAULT '0',
+  `address` varchar(255) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `gender` enum('male','female','unisex') NOT NULL,
+  `position` varchar(20) DEFAULT 'customer',
+  `register_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `digital_wallet` int NOT NULL,
+  `loyalty_points` int NOT NULL,
+  `favorite_sellers` json NOT NULL,
+  `order_history` json NOT NULL,
+  `addresses` json NOT NULL,
+  `status` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `user_name` (`username`),
+  UNIQUE KEY `mobile` (`mobile`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=20000006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: discount
+CREATE TABLE `discount` (
+  `discount_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `description` text,
+  `discount_type` enum('percentage','amount') NOT NULL,
+  `discount_value` float NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`discount_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: employee
+CREATE TABLE `employee` (
+  `employee_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `family` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `mobile` char(13) NOT NULL,
+  `birthday` varchar(50) NOT NULL,
+  `age` int DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `gender` enum('male','female','unisex') NOT NULL,
+  `position` varchar(20) DEFAULT 'employee',
+  `register_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `salary` float NOT NULL,
+  `department` varchar(50) NOT NULL,
+  `branch` varchar(45) NOT NULL,
+  `hire_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `attendance_records` json NOT NULL,
+  `status` varchar(25) DEFAULT 'active',
+  PRIMARY KEY (`employee_id`),
+  UNIQUE KEY `user_name` (`username`),
+  UNIQUE KEY `mobile` (`mobile`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=50000005 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: invoice
+CREATE TABLE `invoice` (
+  `invoice_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `customer_id` int NOT NULL,
+  `total_item` int NOT NULL,
+  `total_amount` float NOT NULL,
+  `paid_id` int NOT NULL,
+  `paid_amount` float NOT NULL,
+  `payment_method` varchar(45) NOT NULL,
+  `invoice_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(45) NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`invoice_id`),
+  KEY `order_id` (`order_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: notifiction
+CREATE TABLE `notifiction` (
+  `noti_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`noti_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: order_item
+CREATE TABLE `order_item` (
+  `order_item_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `stock_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  `price` float NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`),
+  KEY `stock_id` (`stock_id`),
+  CONSTRAINT `order_item_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  CONSTRAINT `order_item_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `stock_id` FOREIGN KEY (`stock_id`) REFERENCES `stock` (`stock_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: orders
+CREATE TABLE `orders` (
+  `order_id` int NOT NULL AUTO_INCREMENT,
+  `cart_id` int NOT NULL,
+  `customer_id` int NOT NULL,
+  `total_items` int NOT NULL,
+  `total_amount` float NOT NULL,
+  `discount_amount` float DEFAULT '0',
+  `coupon_code` varchar(50) DEFAULT 'None',
+  `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(45) NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`order_id`),
+  KEY `cart_id` (`cart_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: payment
+CREATE TABLE `payment` (
+  `payment_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `order_id` int NOT NULL,
+  `paid_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(30) NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`payment_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  CONSTRAINT `payment_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: product
+CREATE TABLE `product` (
+  `product_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `category` varchar(45) NOT NULL,
+  `parent_category` varchar(45) NOT NULL,
+  `brand` varchar(45) NOT NULL,
+  `model` varchar(45) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `color` varchar(25) NOT NULL,
+  `price` float NOT NULL,
+  `markup` float NOT NULL,
+  `product_spect` json NOT NULL,
+  `sale_price` float NOT NULL,
+  `warranty` int NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `images` json NOT NULL,
+  `status` varchar(25) NOT NULL,
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=97000004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: product_group
+CREATE TABLE `product_group` (
+  `group_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `description` text,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: product_temp
+CREATE TABLE `product_temp` (
+  `product_temp_id` int NOT NULL AUTO_INCREMENT,
+  `seller_id` int NOT NULL,
+  `name` varchar(60) NOT NULL,
+  `category` varchar(45) NOT NULL,
+  `parent_category` varchar(45) NOT NULL,
+  `brand` varchar(45) NOT NULL,
+  `model` varchar(45) NOT NULL,
+  `color` varchar(25) NOT NULL,
+  `price` float NOT NULL,
+  `markup` float NOT NULL,
+  `product_spect` json NOT NULL,
+  `sale_price` float NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `warranty` int NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `images` json NOT NULL,
+  `status` varchar(25) NOT NULL DEFAULT 'deactive',
+  PRIMARY KEY (`product_temp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=92000003 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: seller
+CREATE TABLE `seller` (
+  `seller_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `family` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `mobile` char(13) NOT NULL,
+  `birthday` varchar(50) NOT NULL,
+  `age` varchar(3) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `gender` enum('male','female','unisex') NOT NULL,
+  `position` varchar(20) DEFAULT 'seller',
+  `register_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `shop_name` varchar(50) NOT NULL,
+  `business_license` int DEFAULT NULL,
+  `tax_number` int DEFAULT NULL,
+  `bank_account` varchar(45) NOT NULL,
+  `rating` float NOT NULL,
+  `total_sales` float NOT NULL,
+  `status` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`seller_id`),
+  UNIQUE KEY `user_name` (`username`),
+  UNIQUE KEY `mobile` (`mobile`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=60000004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: stock
+CREATE TABLE `stock` (
+  `stock_id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL,
+  `seller_id` int NOT NULL,
+  `warehouse_id` int NOT NULL,
+  `quantity` int NOT NULL DEFAULT '0',
+  `markup_percent` float DEFAULT '0',
+  `discount_percent` float DEFAULT '0',
+  `sale_price` float NOT NULL DEFAULT '0',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` int NOT NULL,
+  PRIMARY KEY (`stock_id`),
+  UNIQUE KEY `unique_inventory` (`product_id`,`seller_id`,`warehouse_id`),
+  KEY `seller_id` (`seller_id`),
+  KEY `warehouse_id` (`warehouse_id`),
+  CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `stock_ibfk_2` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`),
+  CONSTRAINT `stock_ibfk_3` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`warehouse_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table: warehouse
+CREATE TABLE `warehouse` (
+  `warehouse_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `warehouse_type` enum('central','in_transit','branch','defective') NOT NULL DEFAULT 'central',
+  `branch_name` varchar(45) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`warehouse_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
